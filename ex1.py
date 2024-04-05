@@ -5,9 +5,15 @@ class DLeftHashTable:
         self.entries = entries
         self.buckets = buckets
 
+    def _hash(self, key):
+        hash_value = 0
+        for char in key:
+            hash_value += ord(char)
+        return hash_value % self.entries
+
     def insert(self, key, value):
-        left_hash = hash(key) % self.entries
-        right_hash = hash(key[::-1]) % self.entries
+        left_hash = self._hash(key) % self.entries
+        right_hash = self._hash(key[::-1]) % self.entries
 
         if len(self.left_table[left_hash]) <= len(self.right_table[right_hash]):
             self.left_table[left_hash].append((key, value))
@@ -15,8 +21,8 @@ class DLeftHashTable:
             self.right_table[right_hash].append((key, value))
 
     def lookup(self, key):
-        left_hash = hash(key) % self.entries
-        right_hash = hash(key[::-1]) % self.entries
+        left_hash = self._hash(key) % self.entries
+        right_hash = self._hash(key[::-1]) % self.entries
 
         for k, v in self.left_table[left_hash]:
             if k == key:
